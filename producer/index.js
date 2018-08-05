@@ -146,13 +146,13 @@ async function riderSignup(name) {
         ride_id: null
     };
 
-    riders.set(rider.id, rider);
-
     // Message publication...
     await publish({
         type: 'rider_signed_up',
         payload: rider
     });
+
+    return rider;
 }
 
 /**
@@ -235,9 +235,7 @@ async function riderTic(rider) {
 
     if (!rider.ride_id && Math.random() < probabilities.ride_created.probability) {
         riderRideCreate(rider);
-    }
-
-    if (rider.ride_id && Math.random() < probabilities.ride_completed.probability) {
+    } else if (rider.ride_id && Math.random() < probabilities.ride_completed.probability) {
         riderRideCompleted(rider);
     }
 }
@@ -249,14 +247,15 @@ async function riderTic(rider) {
  */
 async function tic(n) {
     logger.debug('tic');
+    let newRiders = [];
     if (n > riders.size && Math.random() < EVENTS.rider_signed_up.probability) {
-        riderSignup();
+        newRiders.push(riderSignup());
     }
 
     // Special riders creation
     for (const name in SPECIAL_RIDERS) {
         if (Math.random() < SPECIAL_RIDERS[name].events.rider_signed_up.probability) {
-            riderSignup(name);
+            newRiders.push(riderSignup(name));
 
             // Unique special rider creation:
             SPECIAL_RIDERS[name].events.rider_signed_up.probability = 0;
@@ -268,6 +267,9 @@ async function tic(n) {
     logger.debug({ tics_length: tics.length }, 'Riders tic length');
     logger.info({ tics: tics.length }, 'Number of riders tics');
     await Promise.all(tics);
+    for (const rider of newRiders) {
+        riders.set(rider.id, rider);
+    }
 }
 
 /**

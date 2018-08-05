@@ -20,9 +20,20 @@ async function get(id) {
 async function list() {
   const client = await mongo.client();
   const collection = await client.collection('riders');
-  const riders = await collection.find({}, {_id: 1, name: 1});
-  // TODO this is somehow circular
+  const riders = await collection.find({}, {_id: 1, name: 1}).toArray();
   return riders ? JSON.parse(JSON.stringify(riders)) : null;
+}
+
+/**
+ * @export
+ */
+async function remove(id) {
+  const client = await mongo.client();
+  const collection = await client.collection('riders');
+  const filter = id ? {'_id': id} : {};
+  let err, r;
+  [err, r] = await mongo.to(collection.deleteMany(filter));
+  return err;
 }
 
 /**
@@ -70,7 +81,9 @@ async function createRide(rider, rideId, price) {
 
   rider.rides[rideId] = {
     status: 'InProgress',
-    price
+    price,
+    // Store the date so we can recompute loyalty with different rules later on
+    timestamp: new Date().toISOString()
   };
   return await update(rider);
 }
@@ -139,6 +152,7 @@ module.exports = {
   get,
   create,
   list,
+  remove,
   createRide,
   completeRide
 };

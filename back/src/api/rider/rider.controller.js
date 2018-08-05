@@ -38,6 +38,35 @@ async function listRiders(req, res) {
  * @param {Object} req express request
  * @param {Object} res express response
  */
+async function deleteRider(req, res) {
+  const { id } = req.params;
+  let err = await store.rider.remove(id);
+  if (!err) {
+    return res.status(HttpStatus.OK).send({ message: `Rider ${id} deleted.`});
+  } else {
+    return res.status(HttpStatus.BAD_REQUEST).send({ message: `Failed to delete rider ${id}.`});
+  }
+}
+
+/**
+ * Get welcome message
+ * @param {Object} req express request
+ * @param {Object} res express response
+ */
+async function deleteRiders(req, res) {
+  let err = await store.rider.remove();
+  if (!err) {
+    return res.status(HttpStatus.OK).send({ message: 'All riders deleted.'});
+  } else {
+    return res.status(HttpStatus.BAD_REQUEST).send({ message: 'Failed to delete riders.'});
+  }
+}
+
+/**
+ * Get welcome message
+ * @param {Object} req express request
+ * @param {Object} res express response
+ */
 async function createRider(req, res) {
   const { id } = req.params;
   const { name } = req.body;
@@ -131,6 +160,8 @@ module.exports = {
   getRider,
   listRiders,
   createRider,
+  deleteRider,
+  deleteRiders,
   getRide,
   listRides,
   upsertRide

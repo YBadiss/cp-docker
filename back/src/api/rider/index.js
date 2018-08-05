@@ -32,7 +32,9 @@ const router = express.Router();
  *
  */
 router.get('/', wrap(controller.listRiders));
+router.delete('/', wrap(controller.deleteRiders));
 router.get('/:id', wrap(controller.getRider));
+router.delete('/:id', wrap(controller.deleteRider));
 router.post('/:id', wrap(controller.createRider));
 router.get('/:id/rides', wrap(controller.listRides));
 router.get('/:id/rides/:rideId', wrap(controller.getRide));
