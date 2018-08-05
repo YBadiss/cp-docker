@@ -17,7 +17,6 @@ async function client() {
 }
 
 /**
- * Get welcome message
  * @param {Promise} promise
  * @return {Promise}
  */

@@ -5,7 +5,6 @@ const HttpStatus = require('http-status-codes');
 const store = require('../../store');
 
 /**
- * Get welcome message
  * @param {Object} req express request
  * @param {Object} res express response
  */
@@ -20,7 +19,6 @@ async function getRider(req, res) {
 }
 
 /**
- * Get welcome message
  * @param {Object} req express request
  * @param {Object} res express response
  */
@@ -34,7 +32,6 @@ async function listRiders(req, res) {
 }
 
 /**
- * Get welcome message
  * @param {Object} req express request
  * @param {Object} res express response
  */
@@ -49,7 +46,6 @@ async function deleteRider(req, res) {
 }
 
 /**
- * Get welcome message
  * @param {Object} req express request
  * @param {Object} res express response
  */
@@ -63,7 +59,6 @@ async function deleteRiders(req, res) {
 }
 
 /**
- * Get welcome message
  * @param {Object} req express request
  * @param {Object} res express response
  */
@@ -83,7 +78,6 @@ async function createRider(req, res) {
 }
 
 /**
- * Get welcome message
  * @param {Object} req express request
  * @param {Object} res express response
  */
@@ -106,7 +100,6 @@ async function getRide(req, res) {
 }
 
 /**
- * Get welcome message
  * @param {Object} req express request
  * @param {Object} res express response
  */
@@ -122,7 +115,6 @@ async function listRides(req, res) {
 }
 
 /**
- * Get welcome message
  * @param {Object} req express request
  * @param {Object} res express response
  */
