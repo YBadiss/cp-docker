@@ -1,0 +1,50 @@
+{
+  "name": "loyalty",
+  "version": "1.0.0",
+  "description": "Loyalty service technical test back-end",
+  "main": "src/app.js",
+  "scripts": {
+    "coverage": "LOGGER_LEVEL=fatal NODE_ENV=test nyc _mocha -b",
+    "eslint": "eslint src",
+    "mocha": "NODE_ENV=test _mocha -b",
+    "start": "node .",
+    "start:dev": "nodemon .",
+    "postinstall": "npm run apidoc",
+    "pretest": "npm run eslint",
+    "test": "npm run coverage",
+    "apidoc": "apidoc -i src/api -o apidoc/"
+  },
+  "engines": {
+    "node": "8.5"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "author": "Chauffeur Privé",
+  "devDependencies": {
+    "chai": "4.0.2",
+    "dirty-chai": "2.0.1",
+    "sinon-chai": "2.13.0",
+    "eslint": "3.10.2",
+    "eslint-plugin-import": "2.2.0",
+    "nyc": "10.0.0",
+    "mocha": "3.2.0",
+    "nock": "9.0.13",
+    "nodemon": "1.11.0",
+    "sinon": "^2.3.2",
+    "supertest": "3.0.0"
+  },
+  "dependencies": {
+    "apidoc": "0.17.5",
+    "body-parser": "1.16.1",
+    "co": "4.6.0",
+    "co-express": "1.2.2",
+    "express": "4.14.1",
+    "http-errors": "1.5.1",
+    "http-status-codes": "1.1.6",
+    "joi": "10.2.2",
+    "lodash": "4.17.4",
+    "moment": "2.17.1",
+    "mongodb": "2.2.36"
+  }
+}
