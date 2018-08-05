@@ -14,7 +14,7 @@ docker start rabbitmq
 
 # consumer
 docker build --tag 'consumer:latest' .
-docker create --name consumer --link rabbitmq consumer:latest
+docker create --name consumer --link rabbitmq --link server consumer:latest
 docker start consumer
 ```
 
@@ -43,6 +43,4 @@ The following environments variables are available to configure the `producer` w
 docker stop producer rabbitmq
 docker rm producer rabbitmq producer_rabbitmq_1
 docker rmi -f producer:latest rabbitmq:3-management
-
-docker stop consumer && docker rm consumer && docker build --tag 'consumer:latest' . && docker create --name consumer --link rabbitmq --link server consumer:latest && docker start consumer
 ```
