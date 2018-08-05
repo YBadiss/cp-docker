@@ -37,8 +37,17 @@ let client;
  * Initialize the amqp queues. Each message type has a queue bound to part of the exchange
  */
 async function init() {
-  logger.info('> RabbitMQ initialization');
-  client = await amqplib.connect(AMQP_URL);
+  // Rabbitmq takes a while before being ready, so we try to connect until it works
+  while (true) {
+    try {
+      logger.info('> RabbitMQ initialization');
+      client = await amqplib.connect(AMQP_URL);
+      break;
+    } catch(error) {
+      logger.error('Failed to init, trying again soon...');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
   client.channel = await client.createChannel();
 
   await client.channel.assertExchange(EXCHANGE, 'topic', {

@@ -88,8 +88,17 @@ const riders = new Map()
  * @returns {array} List of drivers
  */
 async function init(n = 10) {
-    logger.info('> RabbitMQ initialization');
-    client = await amqplib.connect(AMQP_URL);
+    // Rabbitmq takes a while before being ready, so we try to connect until it works
+    while (true) {
+      try {
+        logger.info('> RabbitMQ initialization');
+        client = await amqplib.connect(AMQP_URL);
+        break;
+      } catch(error) {
+        logger.error('Failed to init, trying again soon...');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
     client.channel = await client.createChannel();
     await client.channel.assertExchange(EXCHANGE, 'topic', {
         durable: true
@@ -146,13 +155,13 @@ async function riderSignup(name) {
         ride_id: null
     };
 
+    riders.set(rider.id, rider);
+
     // Message publication...
     await publish({
         type: 'rider_signed_up',
         payload: rider
     });
-
-    return rider;
 }
 
 /**
@@ -247,15 +256,14 @@ async function riderTic(rider) {
  */
 async function tic(n) {
     logger.debug('tic');
-    let newRiders = [];
     if (n > riders.size && Math.random() < EVENTS.rider_signed_up.probability) {
-        newRiders.push(riderSignup());
+        riderSignup();
     }
 
     // Special riders creation
     for (const name in SPECIAL_RIDERS) {
         if (Math.random() < SPECIAL_RIDERS[name].events.rider_signed_up.probability) {
-            newRiders.push(riderSignup(name));
+            riderSignup(name);
 
             // Unique special rider creation:
             SPECIAL_RIDERS[name].events.rider_signed_up.probability = 0;
@@ -267,9 +275,6 @@ async function tic(n) {
     logger.debug({ tics_length: tics.length }, 'Riders tic length');
     logger.info({ tics: tics.length }, 'Number of riders tics');
     await Promise.all(tics);
-    for (const rider of newRiders) {
-        riders.set(rider.id, rider);
-    }
 }
 
 /**
