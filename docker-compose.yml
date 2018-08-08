@@ -1,0 +1,34 @@
+version: '3'
+services:
+  store:
+    container_name: store
+    image: mongo:latest
+    ports:
+     - "27017:27017"
+    environment:
+     - MONGO_INITDB_ROOT_USERNAME=ybadiss
+     - MONGO_INITDB_ROOT_PASSWORD=pwd123
+  server:
+    container_name: server
+    build: ./back
+    links:
+     - store
+    ports:
+     - "8000:8000"
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+     - "5672:5672"
+     - "15672:15672"
+  producer:
+    container_name: producer
+    build: ./producer
+    links:
+     - rabbitmq
+  consumer:
+    container_name: consumer
+    build: ./consumer
+    links:
+     - rabbitmq
+     - server
